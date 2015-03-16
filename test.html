@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <SCRIPT SRC="stringBuffer.js"></SCRIPT>
+  <SCRIPT SRC="table.js"></SCRIPT>
+  <SCRIPT SRC="sdp.js"></SCRIPT>
+  <SCRIPT LANGUAGE="JavaScript">
+  <!--
+	var gSdpSession = new SdpSession();
+
+	function onParse()
+	{
+		var sdp = "v=0\r\n";
+		sdp += "o=TelTelUA 1004651249 1190320510 IN IP4 127.0.0.1\r\n";
+		sdp += "s=testSdp\r\n";
+		sdp += "c=IN IP4 127.0.0.1\r\n";
+		sdp += "b=X-YZ:128\r\n";
+		sdp += "b=X-YZ:256\r\n";
+		sdp += "i=A Seminar on the session description protocol\r\n";
+		sdp += "u=http://www.example.com/seminars/sdp.pdf\r\n";
+		sdp += "e=j.doe@example.com (Jane Doe)\r\n";
+		sdp += "t=0 0\r\n";
+		sdp += "r=604800 3600 0\r\n"
+		sdp += "t=1 2\r\n";
+		sdp += "r=1230 3600 0\r\n"
+		sdp += "t=33 56\r\n";
+		sdp += "z=2882844526 -1h\r\n";
+		sdp += "k=clear:ssffmm\r\n";
+		sdp += "a=sdfsdfsf\r\n";
+		sdp += "a=sdfsfsdwerwerwer\r\n"
+		sdp += "m=audio 7202 RTP/AVP 103 97 98 100 101 0 8 13 104\r\n";
+		sdp += "a=rtpmap:103 ISAC/16000\r\n";
+		sdp += "a=rtpmap:97 iLBC/8000\r\n"
+		sdp += "a=sendrecv\r\n";
+		sdp += "m=video 7202 RTP/AVP 103 97 98 100 101 0 8 13 104\r\n";
+		sdp += "a=rtpmap:103 ISAC/16000\r\n";
+		sdp += "a=rtpmap:97 iLBC/8000\r\n"
+		sdp += "a=adsf\r\n";
+
+		gSdpSession.parse(sdp);
+		OutputObj.value = gSdpSession.toString();
+		GetObj.disabled = false;
+		gSdpSession.validate();
+	}
+
+	function onGetObj()
+	{
+		var strResult = "";
+
+		var objName = SelectObj.value;
+		if (objName == "v")
+		{
+			OutputObj.value = gSdpSession.getVersion();
+		}
+		else if (objName == "o")
+		{
+			strResult = gSdpSession.getOrigin();
+			var origin = new SdpOrigin("", "", "", "", "", "");
+			origin.parse(strResult);
+			OutputObj.value = origin.toString();
+		}
+		else if (objName == "s")
+		{
+			OutputObj.value = gSdpSession.getName();
+		}
+		else if (objName == "i")
+		{
+			OutputObj.value = gSdpSession.getInformation();
+		}
+		else if (objName == "u")
+		{
+			OutputObj.value = gSdpSession.getUri();
+		}
+		else if (objName == "e")
+		{
+			OutputObj.value = gSdpSession.getEmail();
+		}
+		else if (objName == "p")
+		{
+			OutputObj.value = gSdpSession.getPhone();
+		}
+		else if (objName == "c")
+		{
+			var connect = new SdpConnection("", "", "");
+			connect.parse(gSdpSession.getConnection());
+			OutputObj.value = connect.toString();
+		}
+		else if (objName == "b")
+		{
+			var strBuf = new StringBuffer();
+			var bArray = gSdpSession.getBandwidths();
+			if (bArray != null)
+			{
+				for (var i = 0; i < bArray.length; ++i)
+				{
+					var bandwith = new SdpBandwidth("", "");
+					bandwith.parse(bArray[i]);
+					strBuf.append(bandwith.toString());
+					strBuf.append("\r\n");
+				}
+
+				OutputObj.value = strBuf.toString();
+			}
+		}
+		else if (objName == "t")
+		{
+			var strBuf = new StringBuffer();
+			var bArray = gSdpSession.getTimes();
+			if (bArray != null)
+			{
+				for (var i = 0; i < bArray.length; ++i)
+				{
+					var time = new SdpTime("", "");
+					time.parse(bArray[i]);
+					strBuf.append(time.toString());
+					strBuf.append("\r\n");
+				}
+				OutputObj.value = strBuf.toString();
+			}
+		}
+		else if (objName == "z")
+		{
+			OutputObj.value = gSdpSession.getTimezone();
+		}
+		else if (objName == "k")
+		{
+			var key = new SdpEncryption("", "");alert(gSdpSession.getEncryptionKey());
+			key.parse(gSdpSession.getEncryptionKey());
+			OutputObj.value = key.toString();
+		}
+		else if (objName == "a")
+		{
+			var strBuf = new StringBuffer();
+
+			var table = gSdpSession.getAttributes();
+			for (var i = 0; i < table.size(); ++i)
+			{
+				var attr = new SdpAttribute(table.hashTable[i].key, table.hashTable[i].value);
+				strBuf.append(attr.toString());
+				strBuf.append("\r\n");
+			}
+
+			OutputObj.value = strBuf.toString();
+		}
+		else if (objName == "m")
+		{
+			var strBuf = new StringBuffer();
+			var mArray = gSdpSession.getMedias();
+			if (mArray != null)
+			{
+				for (var i = 0; i < mArray.length; ++i)
+				{
+					var media = new SdpMedia();
+					media.parse(mArray[i]);
+					strBuf.append(media.toString());
+					strBuf.append("\r\n");
+				}
+				OutputObj.value = strBuf.toString();
+			}
+		}
+	}
+
+	function onCreateObj()
+	{
+		gSdpSession.setVersion("0")
+		gSdpSession.setOrigin(new SdpOrigin("TelTelUA", "12345", "ver", "IN", "IP4", "192.168.209.180"));
+		gSdpSession.setName("testSdp");
+		gSdpSession.setInformation("I am ok!");
+		gSdpSession.setUri("http://www.google.com");
+		gSdpSession.setEmail(new SdpEmail("test@gmail.com", "google user"));
+		gSdpSession.setPhone("000-11111111");
+		gSdpSession.setConnection(new SdpConnection("IN", "IP4", "192.168.209.137"));
+		gSdpSession.addBandwidth(new SdpBandwidth("X-YZ", "128"));
+		gSdpSession.addBandwidth(new SdpBandwidth("X-YZ", "256"));
+		var time = new SdpTime("123", "456");
+		time.setRepeat(new SdpTimeRepeat("12", "34", "56"));
+		gSdpSession.addTime(time);
+		time = new SdpTime("456778", "456");
+		gSdpSession.addTime(time);
+		gSdpSession.setEncryptionKey(new SdpEncryption("method", "***"));
+		gSdpSession.addAttribute(new SdpAttribute("filename", "test.txt"));
+		gSdpSession.addAttribute(new SdpAttribute("finish", ""));
+
+		var media = new SdpMedia();
+		media.setMediaName("application");
+		media.setPort("9090");
+		media.setProto("tcp/ip");
+		media.setFormat("9");
+		media.setTitle("test");
+		media.setConnection(new SdpConnection("IN", "IP4", "192.168.209.137"));
+		media.addBandwidth(new SdpBandwidth("X-YZ", "128"));
+		media.addBandwidth(new SdpBandwidth("X-YZ", "666"));
+		media.setEncryptionKey(new SdpEncryption("method", "###"));
+		media.addAttribute(new SdpAttribute("filename", "test.txt"));
+		media.addAttribute(new SdpAttribute("finish", ""));
+		gSdpSession.addMedia(media);
+		
+		OutputObj.value = gSdpSession.toString();
+	}
+  //-->
+  </SCRIPT>
+ </HEAD>
+
+ <BODY>
+ <textarea id="OutputObj" name="member" cols ="50" rows = "50"></textarea> <br>
+  <INPUT TYPE="button" style="width: 59px" value="Parse" onclick="onParse()">
+  <INPUT TYPE="text" id="SelectObj" NAME=""><INPUT TYPE="button" id="GetObj" style="width: 70px" value="GetSdpItem" disabled onclick="onGetObj()">
+  <INPUT TYPE="button" id="CreateObj" style="width: 70px" value="CreateSdp" onclick="onCreateObj()">
+ </BODY>
+</HTML>
